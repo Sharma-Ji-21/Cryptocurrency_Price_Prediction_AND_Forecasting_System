@@ -1,0 +1,48 @@
+erDiagram
+
+    CRYPTOCURRENCIES {
+        int        id          PK
+        varchar    name        UK
+        varchar    symbol
+        timestamp  created_at
+    }
+
+    PREDICTION_REQUESTS {
+        int        id              PK
+        int        crypto_id       FK
+        date       start_date
+        date       end_date
+        int        horizon
+        varchar    model_selected
+        timestamp  created_at
+    }
+
+    PREDICTIONS {
+        int        id                PK
+        int        request_id        FK
+        varchar    model_used
+        jsonb      prediction_series
+        timestamp  created_at
+    }
+
+    PREDICTION_METRICS {
+        int        id              PK
+        int        prediction_id   FK
+        float      rmse
+        float      mae
+        float      mda
+        jsonb      explainability
+        timestamp  created_at
+    }
+
+    ERROR_LOGS {
+        int        id           PK
+        varchar    source
+        text       message
+        text       stack_trace
+        timestamp  created_at
+    }
+
+    CRYPTOCURRENCIES    ||--o{ PREDICTION_REQUESTS  : "has"
+    PREDICTION_REQUESTS ||--o{ PREDICTIONS           : "generates"
+    PREDICTIONS         ||--||  PREDICTION_METRICS   : "evaluated by"
