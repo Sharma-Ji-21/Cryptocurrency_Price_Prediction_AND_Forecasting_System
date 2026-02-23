@@ -1,0 +1,55 @@
+flowchart TD
+
+%% Clients
+A[Web Dashboard </br>React]
+B[Mobile App </br>Flutter]
+
+%% API Gateway
+C[FastAPI Backend<br/>REST API Gateway]
+
+A --> C
+B --> C
+
+%% Core Backend Services
+C --> D[Prediction Service<br/>/predict]
+C --> E[History Service<br/>/history]
+C --> F[Crypto Metadata Service<br/>/cryptos]
+
+%% External Data Source
+G[Crypto OHLCV DatasetKaggle / Public APIs]
+
+%% ML Pipeline
+D --> H[Data Ingestion]
+H --> G
+H --> I[Data Cleaning + Preprocessing]
+I --> J[Feature Engineering</br>SMA, EMA, RSI, MACD, VWAP, Lags]
+J --> K[Scaling + Sliding Window]
+
+%% Models
+K --> L[Baseline Models</br>Linear Reg / Random Forest]
+K --> M[Deep Learning Models</br>LSTM / GRU]
+
+L --> N[Prediction Output]
+M --> N
+
+%% Metrics + Explainability
+N --> O[Evaluation Metrics</br>RMSE, MAE, MDA]
+N --> P[Explainability </br> Feature Importance]
+
+%% Database
+Q[(PostgreSQL)]
+
+O --> Q
+P --> Q
+N --> Q
+E --> Q
+F --> Q
+
+%% Error Handling
+D --> R[Error Logger]
+R --> Q
+
+%% Response back to clients
+Q --> C
+C --> A
+C --> B
